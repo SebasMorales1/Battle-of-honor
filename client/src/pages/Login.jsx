@@ -24,7 +24,7 @@ const handleSubmit = (e) => {
 
     return (
         <form className='container-login flex h-screen' onSubmit={handleSubmit}>
-            <div className="fields-login w-1/2 h-full bg-cover bg-no-repeat bg-center " style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <div className="fields-login w-1/2 h-full bg-form bg-cover bg-no-repeat bg-center">
                 <div className='container-content flex flex-col m-20'>
                   <h1 className='italic text-white text-5xl text-center mb-10 font-bold' >Login</h1>
                   <input className='mb-8 p-4 rounded-3xl' type="text" placeholder='NickName' value={name} 

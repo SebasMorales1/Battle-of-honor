@@ -26,7 +26,7 @@ const handleSubmit = (e) => {
 
     return (
       <form className='container-register flex h-screen' onSubmit={handleSubmit}>
-          <div className="fields-register w-1/2 h-full bg-cover bg-no-repeat bg-center " style={{ backgroundImage: `url(${backgroundImage})` }}>
+          <div className="fields-register w-1/2 h-full bg-form bg-cover bg-no-repeat bg-center">
               <div className='container-content flex flex-col m-20'>
                 <h1 className='italic text-white text-5xl text-center mb-10 font-bold' >Register</h1>
                 <input className='mb-8 p-4 rounded-3xl' type="text" value={name} 
@@ -39,7 +39,7 @@ const handleSubmit = (e) => {
                 onChange={e => setConfirmPassword(e.target.value)} placeholder='Confirm password' id="" />
                 <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Register</button>
               </div>
-              {error && <p className='Alert-message text-red-500 font-bold text-2xl text-center drop-shadow-sm'>Los campos estan vacios</p>}
+              {error && <p className='Alert-message text-red-500 font-bold text-2xl text-center drop-shadow-sm'>The fields are required.</p>}
           </div>
           <div className="logo">
               <img className='w-full sm:w-full h-full' src={LogoImage} alt="" />
