@@ -25,11 +25,11 @@ const handleSubmit = (e) => {
     return (
         <form className='container-login flex h-screen' onSubmit={handleSubmit}>
             <div className="fields-login w-1/2 h-full bg-form bg-cover bg-no-repeat bg-center">
-                <div className='container-content flex flex-col m-20'>
-                  <h1 className='italic text-white text-5xl text-center mb-10 font-bold' >Login</h1>
-                  <input className='mb-8 p-4 rounded-3xl' type="text" placeholder='NickName' value={name} 
+                <div className='container-content flex flex-col items-center justify-center m-20'>
+                  <h1 className='italic text-white text-5xl text-center mb-16 font-bold' >Login</h1>
+                  <input className='mb-7 w-4/5 p-2 rounded-xl bg-white/90 placeholder:text-black' type="text" placeholder='NickName' value={name} 
                   onChange={e => setName(e.target.value)} id="" />
-                  <input className='mb-8 p-4 rounded-3xl' type="password" placeholder='password' value={password} 
+                  <input className='mb-7 w-4/5 p-2 rounded-xl bg-white/90 placeholder:text-black' type="password" placeholder='password' value={password} 
                   onChange={e => setPassword(e.target.value)} id="" />
                   <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Login</button>
                 </div>

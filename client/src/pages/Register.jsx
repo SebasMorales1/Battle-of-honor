@@ -27,15 +27,15 @@ const handleSubmit = (e) => {
     return (
       <form className='container-register flex h-screen' onSubmit={handleSubmit}>
           <div className="fields-register w-1/2 h-full bg-form bg-cover bg-no-repeat bg-center">
-              <div className='container-content flex flex-col m-20'>
+              <div className='container-content flex flex-col items-center justify-center m-20'>
                 <h1 className='italic text-white text-5xl text-center mb-10 font-bold' >Register</h1>
-                <input className='mb-8 p-4 rounded-3xl' type="text" value={name} 
+                <input className='mb-7 w-4/5 p-2 rounded-xl bg-white/90 placeholder:text-black' type="text" value={name} 
                 onChange={e => setName(e.target.value)} placeholder='NickName' id="" />
-                <input className='mb-8 p-4 rounded-3xl'type="email" value={email} 
+                <input className='mb-7 w-4/5 p-2 rounded-xl bg-white/90 placeholder:text-black'type="email" value={email} 
                 onChange={e => SetEmail(e.target.value)} placeholder='E-mail' id="" />
-                <input className='mb-8 p-4 rounded-3xl' type="password" value={password} 
+                <input className='mb-7 w-4/5 p-2 rounded-xl bg-white/90 placeholder:text-black' type="password" value={password} 
                 onChange={e => setPassword(e.target.value)} placeholder='password' id="" />
-                <input className='mb-8 p-4 rounded-3xl' type="password" value={confirmPassword}
+                <input className='mb-7 w-4/5 p-2 rounded-xl bg-white/90 placeholder:text-black' type="password" value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)} placeholder='Confirm password' id="" />
                 <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Register</button>
               </div>
