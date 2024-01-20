@@ -33,7 +33,7 @@ const handleSubmit = (e) => {
                   onChange={e => setPassword(e.target.value)} id="" />
                   <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Login</button>
                 </div>
-                {error && <p className='Alert-message text-red-500 font-bold text-2xl text-center drop-shadow-sm'>Los campos estan vacios</p>}
+                {error && <p className='Alert-message text-red-500 font-bold text-2xl text-center drop-shadow-sm'>The fields are required.</p>}
             </div>
             <div className="logo">
                 <img className='w-full sm:w-full h-full' src={LogoImage} alt="" />
