@@ -20,3 +20,24 @@ export const register = async (req, res) => {
     res.status(500).json({ msg: 'Internal server error' })
   }
 }
+
+export const login = async (req, res) => {
+  const { email, password } = req.body
+
+  try {
+    const user = await UserModel.findOne({ email })
+
+    if (!user.email)
+      return res.status(400).json({ msg: 'Invalid credentials' })
+
+    const matchPasswords = await bcrypt.compare(password, user.password)
+
+    if (!matchPasswords)
+      return res.status(400).json({ msg: 'Invalid credentials' })
+
+    res.json({ msg: 'User logged' })
+  } catch (error) {
+    console.error(`Error when user tries to register: ${error}`);
+    res.status(500).json({ msg: 'Internal server error' })
+  }
+}
