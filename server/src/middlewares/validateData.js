@@ -29,7 +29,7 @@ export const registerBody = [
     .exists(),
   body('nickname', 'Nickname must be a minimum of 3 characters and a maximum of 50 characters')
     .trim()
-    .isLength({ min: 3, max: 40 }),
+    .isLength({ min: 3, max: 50 }),
   body('nickname')
     .custom(async (value) => {
       const user = await UserModel.findOne({ nickname: value })
