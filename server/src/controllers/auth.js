@@ -51,14 +51,19 @@ export const login = async (req, res) => {
 
     res.cookie('refreshToken', refreshToken, refreshTokenCookie).json({ msg: 'User logged' })
   } catch (error) {
-    console.error(`Error when user tries to register: ${error}`);
+    console.error(`Error when user tries to login: ${error}`);
     res.status(500).json({ msg: 'Internal server error' })
   }
 }
 
 export const generateAccessToken = async (req, res) => {
-  const { uid } = decode(req.signedCookies.refreshToken)
-  const accesToken = await createAccessToken(uid)
+  try {
+    const { uid } = decode(req.signedCookies.refreshToken)
+    const accessToken = await createAccessToken(uid)
   
-  res.json({ accessToken: accesToken })
+    res.json({ accessToken })
+  } catch (error) {
+    console.log(`Error when tries to generate access token: ${error}`)
+    res.status(500).json({ msg: 'Internal error' })
+  }
 }
