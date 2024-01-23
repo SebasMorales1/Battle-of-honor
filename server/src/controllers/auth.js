@@ -1,15 +1,14 @@
 import UserModel from '../models/User.js'
 import bcrypt from 'bcryptjs'
-import { createToken } from '../utils/manageToken.js'
+import { createAccessToken, createRefreshToken } from '../utils/manageToken.js'
+import { decode } from 'jsonwebtoken'
 
-const cookieOptions = (expires) => {
-  return {
-    expires,
-    sameSite: 'Lax',
-    secure: process.env.MODE !== 'dev',
-    httpOnly: true,
-    signed: true
-  }
+const refreshTokenCookie = {
+  sameSite: 'Lax',
+  secure: process.env.MODE !== 'dev',
+  httpOnly: true,
+  signed: true,
+  expires: new Date(Date.now() + process.env.REFRESH_TOKEN_EXPIRE * 1000)
 }
 
 export const register = async (req, res) => {
@@ -25,12 +24,9 @@ export const register = async (req, res) => {
     })
 
     await newUser.save()
+    const refreshToken = await createRefreshToken(newUser._id)
 
-    const token = await createToken(newUser._id)
-
-    const expires = new Date(Date.now() + 60 * 15 * 1000)
-
-    res.status(201).cookie('token', token, cookieOptions(expires)).json({ msg: 'User registered' })
+    res.status(201).cookie('refreshToken', refreshToken, refreshTokenCookie).json({ msg: 'User registered' })
   } catch (error) {
     console.error(`Error when user tries to register: ${error}`);
     res.status(500).json({ msg: 'Internal server error' })
@@ -51,12 +47,18 @@ export const login = async (req, res) => {
     if (!matchPasswords)
       return res.status(400).json({ msg: 'Invalid credentials' })
 
-    const token = await createToken(user._id)
-    const expires = new Date(Date.now() + 60 * 15 * 1000)
+    const refreshToken = await createRefreshToken(user._id)
 
-    res.cookie('token', token, cookieOptions(expires)).json({ msg: 'User logged' })
+    res.cookie('refreshToken', refreshToken, refreshTokenCookie).json({ msg: 'User logged' })
   } catch (error) {
     console.error(`Error when user tries to register: ${error}`);
     res.status(500).json({ msg: 'Internal server error' })
   }
+}
+
+export const generateAccessToken = async (req, res) => {
+  const { uid } = decode(req.signedCookies.refreshToken)
+  const accesToken = await createAccessToken(uid)
+  
+  res.json({ accessToken: accesToken })
 }
