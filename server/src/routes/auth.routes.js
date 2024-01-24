@@ -1,7 +1,12 @@
 import { Router } from 'express'
-import { generateAccessToken, login, register } from '../controllers/auth.js'
+import {
+  generateAccessToken,
+  login,
+  profile,
+  register 
+} from '../controllers/auth.js'
 import { loginBody, registerBody } from '../middlewares/validateData.js'
-import { verifyRefreshToken } from '../middlewares/verifyToken.js'
+import { verifyAccessToken, verifyRefreshToken } from '../middlewares/verifyToken.js'
 
 const router = Router()
 const path = '/api/'
@@ -9,5 +14,7 @@ const path = '/api/'
 router.post(`${path}register`, registerBody, register)
 router.post(`${path}login`, loginBody, login)
 router.post(`${path}generate-token`, verifyRefreshToken, generateAccessToken)
+
+router.get(`${path}profile`, verifyAccessToken, profile)
 
 export default router

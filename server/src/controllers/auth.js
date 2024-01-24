@@ -67,3 +67,20 @@ export const generateAccessToken = async (req, res) => {
     res.status(500).json({ msg: 'Internal error' })
   }
 }
+
+export const profile = async (req, res) => {
+  const { uid } = decode(req.token)
+
+  try {
+    const user = await UserModel.findById(uid).select('nickname email')
+
+    res.json({
+      id: user._id,
+      nickname: user.nickname,
+      email: user.email
+    })
+  } catch (error) {
+    console.log(`Error when tries to get user profile: ${error}`)
+    res.status(500).json({ error: 'Internal error' })
+  }
+}
