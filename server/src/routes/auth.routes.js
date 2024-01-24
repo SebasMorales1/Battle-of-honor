@@ -2,6 +2,7 @@ import { Router } from 'express'
 import {
   generateAccessToken,
   login,
+  logout,
   profile,
   register 
 } from '../controllers/auth.js'
@@ -16,5 +17,6 @@ router.post(`${path}login`, loginBody, login)
 router.post(`${path}generate-token`, verifyRefreshToken, generateAccessToken)
 
 router.get(`${path}profile`, verifyAccessToken, profile)
+router.get(`${path}logout`, logout)
 
 export default router

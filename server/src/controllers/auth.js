@@ -84,3 +84,9 @@ export const profile = async (req, res) => {
     res.status(500).json({ error: 'Internal error' })
   }
 }
+
+export const logout = async (_, res) => {
+  res.clearCookie('refreshToken')
+
+  res.json({ msg: 'User logouted' })
+}
