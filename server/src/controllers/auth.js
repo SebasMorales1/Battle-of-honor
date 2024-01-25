@@ -2,14 +2,7 @@ import UserModel from '../models/User.js'
 import bcrypt from 'bcryptjs'
 import { createAccessToken, createRefreshToken } from '../utils/manageToken.js'
 import { decode } from 'jsonwebtoken'
-
-const refreshTokenCookie = {
-  sameSite: 'Lax',
-  secure: process.env.MODE !== 'dev',
-  httpOnly: true,
-  signed: true,
-  expires: new Date(Date.now() + process.env.REFRESH_TOKEN_EXPIRE * 1000)
-}
+import crypto from 'crypto-js'
 
 export const register = async (req, res) => {
   const { nickname, email, password } = req.body
@@ -24,9 +17,9 @@ export const register = async (req, res) => {
     })
 
     await newUser.save()
-    const refreshToken = await createRefreshToken(newUser._id)
+    let refreshToken = await createRefreshToken(newUser._id)
 
-    res.status(201).cookie('refreshToken', refreshToken, refreshTokenCookie).json({ msg: 'User registered' })
+    res.status(201).json({ msg: 'User registered', refreshToken })
   } catch (error) {
     console.error(`Error when user tries to register: ${error}`);
     res.status(500).json({ msg: 'Internal server error' })
@@ -49,7 +42,7 @@ export const login = async (req, res) => {
 
     const refreshToken = await createRefreshToken(user._id)
 
-    res.cookie('refreshToken', refreshToken, refreshTokenCookie).json({ msg: 'User logged' })
+    res.json({ msg: 'User logged', refreshToken })
   } catch (error) {
     console.error(`Error when user tries to login: ${error}`);
     res.status(500).json({ msg: 'Internal server error' })

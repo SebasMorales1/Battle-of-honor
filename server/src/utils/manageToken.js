@@ -1,4 +1,5 @@
 import Jwt from 'jsonwebtoken'
+import crypto from 'crypto-js'
 
 export function createAccessToken(uid) {
   return new Promise((resolve, reject) => {
@@ -28,7 +29,8 @@ export function createRefreshToken(uid) {
       (error, token) => {
         if (error)
           reject(error)
-        resolve(token)
+        const encrypt = crypto.AES.encrypt(token, process.env.ENCRYPT_REFRESH_TOKEN)
+        resolve(encrypt.toString())
       }
     )
   })

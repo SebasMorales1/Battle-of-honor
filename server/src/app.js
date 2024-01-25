@@ -2,7 +2,6 @@ import 'dotenv/config'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
-import cookieParser from 'cookie-parser'
 
 import { connection } from './db.js'
 import authRoutes from './routes/auth.routes.js'
@@ -22,11 +21,9 @@ app.use(cors({
     if ((process.env.MODE==="dev" ? !origin : false) || whiteList.includes(origin))
       return callback(null, origin)
     return callback(`Error cors origin ${origin} not authorization`)
-  },
-  credentials: true,
+  }
 }))
 
-app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(morgan('dev'))
 app.use(express.json())
 
