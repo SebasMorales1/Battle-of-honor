@@ -1,8 +1,8 @@
 import UserModel from '../models/User.js'
 import bcrypt from 'bcryptjs'
 import { createAccessToken, createRefreshToken } from '../utils/manageToken.js'
-import { decode } from 'jsonwebtoken'
-import crypto from 'crypto-js'
+import jwt from 'jsonwebtoken'
+import InvalidTokenModel from '../models/InvalidToken.js'
 
 export const register = async (req, res) => {
   const { nickname, email, password } = req.body
@@ -54,7 +54,10 @@ export const refresh = async (req, res) => {
     const uid = req.uid
     const accessToken = await createAccessToken(uid)
 
-    res.json({ accessToken })
+    res.json({
+      accessToken,
+      refreshToken: req.refreshToken
+    })
   } catch (error) {
     console.log(`Error when tries to generate access token: ${error}`)
     res.status(500).json({ msg: 'Internal error' })
@@ -62,7 +65,7 @@ export const refresh = async (req, res) => {
 }
 
 export const profile = async (req, res) => {
-  const { uid } = decode(req.token)
+  const { uid } = jwt.decode(req.token)
 
   try {
     const user = await UserModel.findById(uid).select('nickname email')
@@ -78,8 +81,19 @@ export const profile = async (req, res) => {
   }
 }
 
-export const logout = async (_, res) => {
-  res.clearCookie('refreshToken')
+export const logout = async (req, res) => {
+  try {
+    const token = req.headers.authorization.slice(7)
+    jwt.verify(token, process.env.REFRESH_TOKEN_KEY)
 
-  res.json({ msg: 'User logouted' })
+    const newInvalidateToken = new InvalidTokenModel({
+      token
+    })
+
+    await newInvalidateToken.save()
+    res.json({ msg: 'User logouted' })
+  } catch (error) {
+    console.log(`Error when user tries to logout: ${error}`)
+    res.status(500).json({ error: 'Internal error' })
+  }
 }

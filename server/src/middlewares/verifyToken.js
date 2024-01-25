@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto-js'
+import InvalidTokenModel from '../models/InvalidToken.js'
 
 const errorList = {
   'jwt must be provided': 'Token must be provided',
@@ -10,7 +11,7 @@ const errorList = {
   'key': 'invalid key'
 }
 
-export const verifyRefreshToken = (req, res, next) => {
+export const verifyRefreshToken = async (req, res, next) => {
   let refreshToken = req.headers.authorization
   const { key } = req.params
 
@@ -31,6 +32,12 @@ export const verifyRefreshToken = (req, res, next) => {
     
     jwt.verify(decrypt, process.env.REFRESH_TOKEN_KEY)
 
+    const isInvalid = await InvalidTokenModel.findOne({ token: decrypt })
+
+    if (isInvalid)
+      throw new Error('jwt malformed')
+
+    req.refreshToken = decrypt
     req.uid = jwt.decode(decrypt).uid
     next()
   } catch (err) {
