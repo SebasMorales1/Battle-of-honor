@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import {
-  generateAccessToken,
+  refresh,
   login,
   logout,
   profile,
@@ -14,8 +14,8 @@ const path = '/api/'
 
 router.post(`${path}register`, registerBody, register)
 router.post(`${path}login`, loginBody, login)
-router.post(`${path}generate-token`, verifyRefreshToken, generateAccessToken)
 
+router.get(`${path}refresh/:key`, verifyRefreshToken, refresh)
 router.get(`${path}profile`, verifyAccessToken, profile)
 router.get(`${path}logout`, logout)
 

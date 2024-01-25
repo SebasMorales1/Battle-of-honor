@@ -49,11 +49,11 @@ export const login = async (req, res) => {
   }
 }
 
-export const generateAccessToken = async (req, res) => {
+export const refresh = async (req, res) => {
   try {
-    const { uid } = decode(req.signedCookies.refreshToken)
+    const uid = req.uid
     const accessToken = await createAccessToken(uid)
-  
+
     res.json({ accessToken })
   } catch (error) {
     console.log(`Error when tries to generate access token: ${error}`)

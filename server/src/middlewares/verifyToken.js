@@ -1,18 +1,37 @@
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto-js'
 
 const errorList = {
   'jwt must be provided': 'Token must be provided',
   'jwt malformed': 'Invalid Token',
   'jwt expired': 'Token expired',
   'bearer': 'Token must be bearer',
-  'invalid token': 'invalid token'
+  'invalid token': 'invalid token',
+  'key': 'invalid key'
 }
 
 export const verifyRefreshToken = (req, res, next) => {
-  const { refreshToken } = req.signedCookies
+  let refreshToken = req.headers.authorization
+  const { key } = req.params
 
   try {
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY)
+    if (!refreshToken)
+      throw new Error('jwt must be provided')
+
+    if (!refreshToken.startsWith('Bearer '))
+      throw new Error('bearer')
+
+    if (!key || key !== process.env.ENCRYPT_REFRESH_TOKEN)
+      throw new Error('key')
+
+    refreshToken = refreshToken.slice(7)
+
+    let decrypt = crypto.AES.decrypt(refreshToken, key)
+    decrypt = decrypt.toString(crypto.enc.Utf8) || 'fail'
+    
+    jwt.verify(decrypt, process.env.REFRESH_TOKEN_KEY)
+
+    req.uid = jwt.decode(decrypt).uid
     next()
   } catch (err) {
     const error = errorList[err.message]
@@ -28,6 +47,9 @@ export const verifyAccessToken = (req, res, next) => {
   let token = req.headers.authorization
 
   try {
+    if (!token)
+      throw new Error('jwt must be provided')
+
     if (!token.startsWith('Bearer '))
       throw new Error('bearer')
     token = token.slice(7)
